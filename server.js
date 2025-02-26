@@ -1,5 +1,5 @@
-const mysql = require('mysql2');
 const fs = require('fs');
+const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
   host: 'servertc-25c772c3-adriotcplat2024.a.aivencloud.com',
@@ -12,7 +12,6 @@ const connection = mysql.createConnection({
   }
 });
 
-// Connect to MySQL
 connection.connect(err => {
   if (err) {
     console.error('❌ Database connection failed:', err);
@@ -21,5 +20,4 @@ connection.connect(err => {
   console.log('✅ Connected to Aiven MySQL database!');
 });
 
-// Export connection for use in other files
 module.exports = connection;
