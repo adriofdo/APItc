@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
   host: 'servertc-25c772c3-adriotcplat2024.a.aivencloud.com',
   user: 'avnadmin',
   password: 'AVNS_ohq66m2-xD5dt9ouwg8',
-  database: 'defaultdb',
+  database: 'Tcplat',
   port: 20877,
   ssl: {
     ca: fs.readFileSync('./ca.pem') // ✅ Load Aiven's CA certificate
