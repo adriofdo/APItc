@@ -1,14 +1,15 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
-app.use(cors()); // Allow CORS for frontend requests
+app.use(cors()); // ✅ Allow CORS for frontend requests
 
-// ✅ Use a Connection Pool (Instead of Single Connection)
+// ✅ Use a Connection Pool to avoid connection issues
 const pool = mysql.createPool({
   host: 'servertc-25c772c3-adriotcplat2024.a.aivencloud.com',
   user: 'avnadmin',
@@ -16,14 +17,14 @@ const pool = mysql.createPool({
   database: 'defaultdb',
   port: 20877,
   waitForConnections: true,
-  connectionLimit: 10, // ✅ Allows up to 10 active connections
+  connectionLimit: 10, // ✅ Allows multiple simultaneous queries
   queueLimit: 0,
   ssl: {
-    rejectUnauthorized: true,
+    ca: fs.readFileSync('./ca.pem'), // ✅ Load Aiven's CA certificate
   },
 });
 
-// ✅ Query Route (POST request)
+// ✅ Query Endpoint - Handles database queries securely
 app.post('/query', (req, res) => {
   const { query, values } = req.body;
 
@@ -40,7 +41,7 @@ app.post('/query', (req, res) => {
   });
 });
 
-// ✅ Start Server
+// ✅ Start the Express server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
