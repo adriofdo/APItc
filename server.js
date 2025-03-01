@@ -14,7 +14,7 @@ const pool = mysql.createPool({
   host: 'servertc-25c772c3-adriotcplat2024.a.aivencloud.com',
   user: 'avnadmin',
   password: 'AVNS_ohq66m2-xD5dt9ouwg8',
-  database: 'defaultdb',
+  database: 'Tcplat',
   port: 20877,
   waitForConnections: true,
   connectionLimit: 10, // ✅ Allows multiple simultaneous queries
