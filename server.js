@@ -7,9 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
-app.use(cors()); // ✅ Allow CORS for frontend requests
+app.use(cors());
 
-// ✅ Use a Connection Pool to avoid connection issues
+// ✅ MySQL connection pool
 const pool = mysql.createPool({
   host: 'servertc-25c772c3-adriotcplat2024.a.aivencloud.com',
   user: 'avnadmin',
@@ -17,31 +17,28 @@ const pool = mysql.createPool({
   database: 'Tcplat',
   port: 20877,
   waitForConnections: true,
-  connectionLimit: 10, // ✅ Allows multiple simultaneous queries
+  connectionLimit: 10,
   queueLimit: 0,
   ssl: {
-    ca: fs.readFileSync('./ca.pem'), // ✅ Load Aiven's CA certificate
+    ca: fs.readFileSync('./ca.pem'),
   },
 });
 
-// ✅ Query Endpoint - Handles database queries securely
+// ✅ General query handler (already used in frontend)
 app.post('/query', (req, res) => {
   const { query, values } = req.body;
 
-  if (!query) {
-    return res.status(400).json({ error: 'Missing SQL query' });
-  }
+  if (!query) return res.status(400).json({ error: 'Missing SQL query' });
 
-  pool.query(query, values, (error, results) => {
-    if (error) {
-      console.error('❌ Database query error:', error);
-      return res.status(500).json({ error: 'Database query failed' });
+  pool.query(query, values, (err, results) => {
+    if (err) {
+      console.error('❌ SQL error:', err);
+      return res.status(500).json({ error: 'Query failed' });
     }
-    res.json(results);
-  });
-});
 
-// ✅ Start the Express server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+    res.json({
+      results,
+      insertId: results.insertId || null,
+    });
+  });
 });
